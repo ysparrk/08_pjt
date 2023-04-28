@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Recommended</h1>
+
+{% for genre in genres  %}
+  {% comment %} <button class="m-1"><p>{{ genre.name }}</p></button> {% endcomment %}
+  <a href="{% url 'movies:recommended' genre.pk %}">{{ genre.name }}</a>
+
+{% endfor %}
+
+
+{% comment %} {% for movie in movie_list %}
+  <a href="{% url 'movies:detail' movie.pk %}"><p>{{ movie.title }}</p></a> {% endcomment %}
+
+{% comment %} {% endfor %} {% endcomment %}
+
+
+
+{% endblock content %}
+ 
