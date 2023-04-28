@@ -3,17 +3,15 @@
 {% block content %}
 <h1>Recommended</h1>
 
-{% for genre in genres  %}
-  {% comment %} <button class="m-1"><p>{{ genre.name }}</p></button> {% endcomment %}
-  <a href="{% url 'movies:recommended' genre.pk %}">{{ genre.name }}</a>
 
+{% for genre in genres  %}
+  <a href="{% url 'movies:genre_recommended' genre.pk %}">{{ genre.name }}</a>
 {% endfor %}
 
-
-{% comment %} {% for movie in movie_list %}
-  <a href="{% url 'movies:detail' movie.pk %}"><p>{{ movie.title }}</p></a> {% endcomment %}
-
-{% comment %} {% endfor %} {% endcomment %}
+<hr>
+{% for movie in movie_list %}
+  <a href="{% url 'movies:detail' movie.pk %}">{{ movie.title }}</a>
+{% endfor %}
 
 
 

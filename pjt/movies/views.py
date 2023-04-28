@@ -22,35 +22,33 @@ def detail(request, movie_pk):
     return render(request, 'movies/detail.html', context)
 
 
-# @require_safe
-def recommended(request, genre_pk):
+@require_safe
+def recommended(request):
     
     genres = Genre.objects.all()
     movies = Movie.objects.all()
+
     context = {
         'genres' : genres,
         'movies' : movies,
     }
     return render(request, 'movies/recommended.html', context)
     
+@require_safe
+def genre_recommended(request, genre_pk):
+    genres = Genre.objects.all()
+    movies = Movie.objects.all()
+    movie_list = []
 
+    for movie in movies:
+        
+        m = movie.genres.values()
+        for i in m:
+            if i['id'] == genre_pk:
+                movie_list.append(movie)
 
-
-    # for movie in movies:
-    #     movie.
-
-
-    # movie_list = sorted(movie_list, key = lambda x: (-x[1], -x[2]))
-
-    # context = {
-    #     'movie_list' : movie_list,
-    # }
-
-    # print(movie_list)
-    # context = {
-    #     'genres' : genres,
-    #     'movies' : movies,
-
-    # }
-    
-    # return render(request, 'movies/recommended.html', context)
+    context = {
+        'genres' : genres,
+        'movie_list' : movie_list,
+    }
+    return render(request, 'movies/recommended.html', context)
