@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 class="text-center m-5">{{ person.username }}의 프로필 페이지</h1>
+  {% with followings=person.followings.all followers=person.followers.all %}
+  <div class="container text-center">
+    <div class="col justify-content-center">
+        <h3>
+        <div class="badge bg-primary text-wrap m-3" style="width: 6rem;">팔로워</div>
+        <span id="followers-count">{{ followers|length }}</span>
+        </h3>
+
+        <h3>
+        <div class="badge bg-primary text-wrap m-3" style="width: 6rem;">팔로잉</div>
+        <span id="followeings-count">{{ followings|length }}</span>
+        </h3>
+      </span>
+    </div>
+  </div>
+
+      {% if user != person %}
+        <div>
+          <form id="follow-form" data-user-id="{{ person.pk }}">
+            {% csrf_token %}
+            {% if user in followers %}
+              <button type='submit' class='btn btn-secondary'>언팔로우</button>
+            {% else %}
+              <button type='submit' class='btn btn-primary'>팔로우</button>
+            {% endif %}
+          </form>
+        </div>
+      {% endif %}
+  {% endwith %}
+{% endblock content %}
+
+<!--====================================JS 넣기============================================-->
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!--CDN 가져오기-->
+<script>
+  const form = document.querySelector('#follow-form')
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault()
+
+    const userId = event.target.dataset.userId
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value  // csrftoken 가져오기
+    console.log('000')
+
+    axios({
+      method: 'post',
+      url: `/accounts/${userId}/follow/`,
+      headers: {'X-CSRFToken': csrftoken},  // csrftoken 요청 보낼 때,
+    })
+    .then((response) => {
+      const isFollowed = response.data.is_followed
+      const followBtn = document.querySelector('#follow-form > button')
+
+      followBtn.classList.toggle('btn-secondary')
+      followBtn.classList.toggle('btn-danger')
+
+      const followersCountTag = document.querySelector('#followers-count')
+      const followingsCountTag = document.querySelector('#followings-count')
+
+      const followersCount = response.data.followers_count
+      const followingsCount = response.data.followings_count
+      
+      followersCountTag.innerText = followersCount
+      followingsCountTag.innerText = followingsCount
+
+      if (isFollowed === true) {
+        followBtn.innerText = '언팔로우'
+      } else {
+        followBtn.innerText = '팔로우'
+      }
+
+
+    })
+
+  })
+
+</script>
+
+{% endblock script %}

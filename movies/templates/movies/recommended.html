@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="m-5"></div>
+{% for genre in genres  %}
+  <button type="button" class="btn btn-warning mt-2">
+  <a href="{% url 'movies:genre_recommended' genre.pk %}" class="text-decoration-none text-dark">{{ genre.name }}</a>
+  </button>
+{% endfor %}
+
+<div class="mt-5">
+  아래의 영화는 어떠신가요?
+</div>
+{% for movie in movie_list %}
+  <div>
+    <button type="button" class="btn btn-secondary btn-sm m-2">
+      <a href="{% url 'movies:detail' movie.pk %}" class="text-decoration-none text-light">♡</a>
+    </button>
+    {{ movie.title }}
+  </div>
+{% endfor %}
+
+{% endblock content %}
+ 
